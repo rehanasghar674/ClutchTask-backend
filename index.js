@@ -40,7 +40,4 @@ const PORT = parseInt(process.env.PORT) || 5000;
 
 connectDB().then(() => { 
   createSingleAdmin()
-  app.listen(PORT, () => { 
-    console.log(`server is listening on port: http://localhost:${PORT}`);
-  });
 }) 
