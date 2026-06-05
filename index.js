@@ -1,19 +1,15 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connectDB } from "./config/db.js";
+import { connectDB, isConnected } from "./config/db.js";
 import { userRouter } from "./modules/users/user.routes.js";
 import { taskRouter } from "./modules/tasks/task.routes.js";
 import { createSingleAdmin } from "./modules/users/user.controller.js";
+dotenv.config()
 
-const app = express();
+export const app = express();
 
-app.use(
-  cors({
-    origin: "https://clutch-task-frontend.vercel.app",
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,6 +39,14 @@ app.use((error, req, res, next) => {
 
 const PORT = parseInt(process.env.PORT) || 5000;
 
-connectDB().then(() => {
-  createSingleAdmin();
-});
+app.use((req, res, next) => {
+  if (!isConnected) {
+    connectDB()
+    createSingleAdmin()
+  }
+  next()
+})
+
+// connectDB().then(() => {
+//   createSingleAdmin();
+// });
