@@ -5,7 +5,6 @@ import { connectDB } from "./config/db.js";
 import { userRouter } from "./modules/users/user.routes.js";
 import { taskRouter } from "./modules/tasks/task.routes.js";
 import { createSingleAdmin } from "./modules/users/user.controller.js";
-dotenv.config();
 
 const app = express();
 
