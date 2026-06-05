@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connectDB, isConnected } from "./config/db.js";
+import { connectDB } from "./config/db.js";
 import { userRouter } from "./modules/users/user.routes.js";
 import { taskRouter } from "./modules/tasks/task.routes.js";
 import { createSingleAdmin } from "./modules/users/user.controller.js";
 dotenv.config()
 
-export const app = express();
+const app = express();
 
 app.use(cors());
 
@@ -39,14 +39,16 @@ app.use((error, req, res, next) => {
 
 const PORT = parseInt(process.env.PORT) || 5000;
 
-app.use((req, res, next) => {
-  if (!isConnected) {
-    connectDB()
-    createSingleAdmin()
+const startServer = async (req, res) => {
+  try {
+    await connectDB();
+    await createSingleAdmin();
+    res.json({ message: 'Success' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  next()
-})
+}
 
-// connectDB().then(() => {
-//   createSingleAdmin();
-// });
+startServer()
+
+export default app
