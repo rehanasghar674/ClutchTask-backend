@@ -8,17 +8,20 @@ import { createSingleAdmin } from "./modules/users/user.controller.js";
 
 const app = express();
 
-app.use(cors({
-  origin: 'https://clutch-task-frontend.vercel.app',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "https://clutch-task-frontend.vercel.app",
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-   console.log(`${req.method} - ${req.path}`) 
-   next() 
-})
+  console.log(`${req.method} - ${req.path}`);
+  next();
+});
 
 app.get("/", (req, res) => {
   res.json({
@@ -27,19 +30,19 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use('/api', userRouter) 
-app.use('/api', taskRouter)  
+app.use("/api", userRouter);
+app.use("/api", taskRouter);
 
 app.use((error, req, res, next) => {
-  console.error(error.stack)
+  console.error(error.stack);
   res.json({
     status: false,
-    message: error.message || 'internal server error',
+    message: error.message || "internal server error",
   });
-}); 
+});
 
 const PORT = parseInt(process.env.PORT) || 5000;
 
-connectDB().then(() => { 
-  createSingleAdmin()
-}) 
+connectDB().then(() => {
+  createSingleAdmin();
+});
